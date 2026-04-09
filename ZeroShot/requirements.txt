@@ -1,0 +1,17 @@
+langchain
+langchain-community
+langchain-core
+langchain-ollama
+docling
+google-generativeai
+tqdm
+transformers
+accelerate
+bitsandbytes
+beautifulsoup4
+lxml
+pandas
+pyyaml
+tqdm
+typing-extensions
+seaborn
