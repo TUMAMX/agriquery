@@ -172,10 +172,14 @@
     }
   },
   "question_models_to_test": [
+    "gpt-oss-120b_128k",
+    "gemma3_12B-128k",
+    "qwen3_8B-128k",
     "deepseek-r1_8B-128k",
+    "qwen2.5_7B-128k",
     "llama3.1_8B-128k",
     "llama3.2_3B-128k",
-    "gpt-oss-120b_128k"
+    "deepseek-r1_1.5B-128k"
   ],
   "evaluator_model_name": "gpt-oss-20b_128k",
   "enable_reevaluation": true,

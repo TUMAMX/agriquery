@@ -46,6 +46,7 @@ DEFAULT_LLM_TYPE = "ollama"  # Define default LLM type
 SAVE_PROMPT_FREQUENCY = 100  # Save every Nth prompt
 CHROMA_PERSIST_DIR = "chroma_db"  # Define persist directory path
 MANUALS_DIRECTORY = "manuals"  # Define manuals directory path
+ABLATION_CONTEXT_CONDITIONS = ("no_context", "oracle")
 DATASET_METRIC_KEY = "dataset_self_evaluation_success"  # Define the key name
 
 
@@ -564,6 +565,23 @@ class RagTester:
 
         return previous_results, questions_to_answer_list
 
+    def _oracle_page_text(self, file_identifier: str, page) -> Optional[str]:
+        cache = self.__dict__.setdefault("_oracle_cache", {})
+        base = file_identifier.rsplit("_", 1)[0]
+        if base not in cache:
+            with open(os.path.join(MANUALS_DIRECTORY, f"{base}.md"), encoding="utf-8") as fh:
+                text = fh.read()
+            pages = {}
+            for part in re.split(r"(?m)^(?=## Page \d+\s*$)", text):
+                m = re.match(r"## Page (\d+)", part)
+                if m:
+                    pages[int(m.group(1))] = part.strip()
+            cache[base] = pages
+        try:
+            return cache[base].get(int(page))
+        except (TypeError, ValueError):
+            return None
+
     def _run_qa_phase(
         self,
         retriever: BaseRetriever,
@@ -667,7 +685,18 @@ class RagTester:
 
                 # --- RAG Retrieval ---
                 try:
-                    if current_retrieval_algorithm == "embedding":
+                    if current_retrieval_algorithm == "no_context":
+                        retrieved_chunks_text = []
+                        context = ""
+                    elif current_retrieval_algorithm == "oracle":
+                        page_text = self._oracle_page_text(file_identifier, page)
+                        if page_text is None:
+                            qa_error = True
+                            context = f"Error: gold page {page} not found in {file_identifier}."
+                            model_answer = "Error: Failed during retrieval execution (oracle page missing)."
+                        else:
+                            retrieved_chunks_text = [page_text]
+                    elif current_retrieval_algorithm == "embedding":
                         if not isinstance(retriever, EmbeddingRetriever):
                             # Log error and raise for clarity, although type hint helps
                             logging.error(
@@ -780,6 +809,8 @@ class RagTester:
                     # --- Build Context String ---
                     if retrieved_chunks_text:
                         context = "\n".join(retrieved_chunks_text)
+                    elif current_retrieval_algorithm == "no_context" and not qa_error:
+                        context = ""
                     elif not qa_error:  # If no error but no results
                         context = f"No relevant context found via {current_retrieval_algorithm} search."
                         logging.warning(
@@ -828,10 +859,11 @@ class RagTester:
                             f"Error: Failed during QA generation. Details: {e}"
                         )
                         qa_error = True
-                        llm_invocation_failed = (
-                            True  # Set flag to stop processing other datasets
-                        )
-                        break  # Break out of the question loop on LLM error
+                        if "repeat limit" not in str(e).lower():
+                            llm_invocation_failed = (
+                                True  # Set flag to stop processing other datasets
+                            )
+                            break  # Break out of the question loop on LLM error
 
                 # --- Store Intermediate Result ---
                 dataset_intermediate_results.append(
@@ -1692,6 +1724,20 @@ class RagTester:
                                 dynamic_collection_name = f"{base_collection_name}_cs{chunk_size}_os{overlap_size}"
 
                                 current_retriever: Optional[BaseRetriever] = None
+                                if algorithm in ABLATION_CONTEXT_CONDITIONS:
+                                    self._process_single_combination(
+                                        retrieval_algorithm=algorithm,
+                                        question_model_name=model_name,
+                                        language=file_basename,
+                                        extension=extension,
+                                        file_identifier=file_identifier,
+                                        base_collection_name=base_collection_name,
+                                        chunk_size=chunk_size,
+                                        overlap_size=overlap_size,
+                                        question_llm_connector=current_question_llm_connector,
+                                        retriever=None,
+                                    )
+                                    continue
                                 try:
                                     # The 'initialize_retriever' function (to be refactored in the next step)
                                     # will now use the shared retriever for 'embedding' and 'hybrid' algorithms.

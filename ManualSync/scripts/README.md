@@ -15,10 +15,10 @@ Before you start, make sure the **Ollama application is running** on your comput
 **Step 2: Navigate to the Project Folder**
 
 *   In the command line window, you need to go to the main project folder.
-*   Type `cd` followed by a space, and then the full path to your `RAG2_COMPAG` directory. The path will be unique to your computer.
+*   Type `cd` followed by a space, and then the full path to your `ManualSync` directory. The path will be unique to your computer.
 *   For example, it might look something like this (replace with your actual path):
     ```sh
-    cd C:\Users\YourUsername\Documents\p_llm_manual-1\RAG2_COMPAG
+    cd C:\Users\YourUsername\Documents\agriquery\ManualSync
     ```
 *   Press Enter. The command prompt should now show that you are inside that folder.
 

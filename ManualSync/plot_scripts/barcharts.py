@@ -160,7 +160,7 @@ def create_bidirectional_barchart(
     # --- Formatting Y-Axis to show positive numbers ---
     @ticker.FuncFormatter
     def major_formatter(x, pos):
-        return f'{abs(int(x)):,}'
+        return f'{abs(int(x))}'
 
     ax.yaxis.set_major_formatter(major_formatter)
 
@@ -217,7 +217,7 @@ def create_bidirectional_barchart(
         # 2. Outer Label (Value)
         # For bottom bars, the values in 'container' are negative.
         # We want to label them as absolute integers.
-        labels = [f'{abs(int(v)):,}' if v != 0 else '' for v in container.datavalues]
+        labels = [f'{abs(int(v))}' if v != 0 else '' for v in container.datavalues]
         
         ax.bar_label(
             container,

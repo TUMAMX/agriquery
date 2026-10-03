@@ -18,13 +18,6 @@ This project focuses on evaluating the fundamental retrieval and reasoning capab
     *   **Results:**[ZeroShot Results Folder](ZeroShot/results/)
     *   **Visualizations:** [ZeroShot Visualization Plots](ZeroShot/results/visualization/plots/)
 
-### 2. Second Paper: Embedded ISOBUS Semantic Synchronization
-This subsequent project shifts focus toward the practical, embedded deployment of these models in agricultural machinery over the ISO 11783 (ISOBUS) network. 
-
-**Difference from the first paper:** While the first paper establishes *how* to best retrieve answers (proving Hybrid RAG is superior to Long-Context ingestion), the second paper establishes *how to deliver* the necessary data to the edge hardware given network bandwidth limits (comparing Markdown, JSON, and XML transfer efficiencies) and identifies the Minimum Viable Intelligence (MVI) for offline deployment.
-*   **Project Details & Codebase:** [RAG2_COMPAG README](RAG2_COMPAG/README.md)
-*   **Directory:** [`RAG2_COMPAG/`](RAG2_COMPAG/)
-
 ---
 
 ## Long Context Evaluation (Referred to as "Zeroshot" in Codebase)

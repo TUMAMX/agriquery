@@ -3,8 +3,7 @@ import os
 
 # --- Constants & Configuration ---
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-# Target: LLM_Research/visualization/plots
-OUTPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../../LLM_Research/visualization/plots"))
+OUTPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../visualization/plots"))
 
 def plot_transfer_times():
     os.makedirs(OUTPUT_DIR, exist_ok=True)

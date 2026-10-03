@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import List, Dict, Any, Tuple, Optional
 
 # Import base class and constituent retrievers
@@ -208,11 +209,21 @@ class HybridRetriever(BaseRetriever):
                     # explicitly setting it prevents edge cases.
                     effective_k = min(fetch_k, collection_count)
                     
-                    results = self.collection.query(
-                        query_embeddings=query_embedding,
-                        n_results=effective_k,
-                        include=['documents', 'distances'] # Or 'similarities' depending on space
-                    )
+                    for attempt in range(3):
+                        try:
+                            results = self.collection.query(
+                                query_embeddings=query_embedding,
+                                n_results=effective_k,
+                                include=['documents', 'distances'] # Or 'similarities' depending on space
+                            )
+                            break
+                        except Exception as qe:
+                            logging.error(f"HybridRetriever: embedding query failed (attempt {attempt + 1}/3): {qe}")
+                            if attempt == 2:
+                                raise
+                            time.sleep(2)
+                            if self.chroma_client and self.collection_name:
+                                self.collection = self.chroma_client.get_collection(name=self.collection_name)
                     # Process results (handle potential Nones or empty lists)
                     if results and results.get('ids') and results['ids'][0]:
                         embedding_results_ids = results['ids'][0]
@@ -224,7 +235,7 @@ class HybridRetriever(BaseRetriever):
 
             except Exception as e:
                 logging.error(f"HybridRetriever: Error during embedding search: {e}", exc_info=True)
-                # Continue without embedding results.
+                raise RuntimeError(f"Embedding search failed for collection '{self.collection_name}': {e}") from e
         else:
             logging.warning("HybridRetriever: Skipping embedding search (Chroma collection not available).")
 

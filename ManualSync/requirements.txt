@@ -25,3 +25,5 @@ tqdm
 typing-extensions
 seaborn
 tiktoken
+scipy
+lingua-language-detector

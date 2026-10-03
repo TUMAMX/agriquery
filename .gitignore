@@ -1,11 +1,11 @@
-*/chroma_db/*
-*/results/input_prompts/*
-*/trash/*
-*/*.venv/*
+**/chroma_db/
+**/results/input_prompts/
+**/trash/
+**/.venv/
 *.venv/*
 
-*/manuals/*
+**/manuals/
 *.venv
 *.pyc
-*/*__pycache__*/*
+**/__pycache__/
 __pycache__/*

@@ -170,7 +170,7 @@
   "question_models_to_test": [
     "gpt-oss-120b-cloud_128k"
   ],
-  "evaluator_model_name": "gpt-oss-120b-cloud_128k",
+  "evaluator_model_name": "gpt-oss-120b_128k",
   "enable_reevaluation": true,
   "prompt_paths": {
     "question_prompt": "prompt_templates/question_prompt.txt",
