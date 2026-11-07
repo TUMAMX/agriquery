@@ -4,6 +4,22 @@ ManualSync is a retrieval-augmented generation (RAG) pipeline that answers Engli
 agricultural machinery with locally run open-weight LLMs. It processes manuals in several languages and formats (Markdown,
 JSON, XML) and scores the answers with an LLM judge.
 
+## Publication
+
+Oksanen, T., Gun, J., 2026. Machine-readable operator manuals over the ISO 11783 network for offline, multilingual LLM
+assistance. Computers and Electronics in Agriculture, 112595. https://doi.org/10.1016/j.compag.2026.112595 (accepted manuscript: https://arxiv.org/abs/2610.31863)
+
+```bibtex
+@article{oksanen2026manualsync,
+  author  = {Oksanen, Timo and Gun, Julius},
+  title   = {Machine-readable operator manuals over the {ISO} 11783 network for offline, multilingual {LLM} assistance},
+  journal = {Computers and Electronics in Agriculture},
+  pages   = {112595},
+  year    = {2026},
+  doi     = {10.1016/j.compag.2026.112595}
+}
+```
+
 ## Contents
 
 | Path | Content |
